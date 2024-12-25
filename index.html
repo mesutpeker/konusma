@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Okuma Değerlendirme Tablosu (Dinamik Sınıflar, Sınıf Silme & Düzenleme)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     /* ========== CSS ========== */
     * {
@@ -37,51 +38,77 @@
     }
 
     .form-container {
-      display: flex; 
+      display: flex;
       flex-direction: column;
-      gap: 10px; 
-      margin-bottom: 20px; 
-      padding: 15px;
-      background: #f8f9fa; 
-      border-radius: 8px;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      box-shadow: inset 2px 2px 5px #d1d1d1, inset -2px -2px 5px #ffffff;
     }
 
-    .title-group, .student-info-group {
-      display: flex; 
-      gap: 10px; 
-      flex-wrap: wrap;
-    }
     .title-group {
+      display: flex;
       flex-direction: column;
+      gap: 12px;
+      width: 100%;
     }
+
     .student-info-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
       align-items: center;
     }
 
+    /* ========== Input Alanları ========== */
     .input-long {
+      flex: 1;
       width: 100%;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 13px;
+      min-width: 280px;
+      max-width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      box-shadow: 5px 5px 10px #d1d1d1, -5px -5px 10px #ffffff;
+      transition: all 0.3s ease;
     }
+
     .input-medium {
       flex: 2;
       min-width: 200px;
       max-width: 300px;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 13px;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      box-shadow: 5px 5px 10px #d1d1d1, -5px -5px 10px #ffffff;
+      transition: all 0.3s ease;
     }
+
     .input-short {
       flex: 1;
-      min-width: 120px;
-      max-width: 150px;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 13px;
+      min-width: 150px;
+      max-width: 180px;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      box-shadow: 5px 5px 10px #d1d1d1, -5px -5px 10px #ffffff;
+      transition: all 0.3s ease;
+    }
+
+    /* Input focus efektleri */
+    .input-long:focus,
+    .input-medium:focus,
+    .input-short:focus {
+      outline: none;
+      box-shadow: inset 5px 5px 10px #d1d1d1, inset -5px -5px 10px #ffffff;
     }
 
     .button-group {
@@ -101,76 +128,146 @@
     }
     /* Her sınıf bir sarmalayıcı */
     .class-tab-wrapper {
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 8px;
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      padding: 4px;
+      border-radius: 16px;
+      box-shadow: 5px 5px 10px #d1d1d1, -5px -5px 10px #ffffff;
+      transition: all 0.3s ease;
+    }
+    .class-tab-wrapper:hover {
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 12px #c1c1c1, -6px -6px 12px #ffffff;
     }
     /* Daha büyük sekme butonları */
     .tab-btn {
-      background: #e0e0e0; 
+      background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
       color: #333;
-      border: none; 
-      padding: 14px 30px; 
-      font-size: 16px; 
-      border-radius: 20px; 
-      cursor: pointer; 
-      box-shadow: 0 3px 0 #bdbdbd, 0 3px 6px rgba(0,0,0,0.2);
-      transition: all 0.2s ease;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 30px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 5px 5px 10px #d1d1d1,
+                  -2px -2px 6px #ffffff;
+      transition: all 0.3s ease;
     }
     .tab-btn:hover {
-      box-shadow: 0 4px 0 #bdbdbd, 0 4px 6px rgba(0,0,0,0.3);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 12px #c1c1c1,
+                  -3px -3px 8px #ffffff;
     }
     .tab-btn:active {
       box-shadow: 0 2px 0 #bdbdbd, 0 2px 6px rgba(0,0,0,0.2);
       transform: translateY(1px);
     }
     .tab-btn.active {
-      background: #673AB7; 
+      background: linear-gradient(145deg, #673AB7, #5E35B1);
       color: white;
-      box-shadow: 0 3px 0 #5E35B1, 0 3px 6px rgba(0,0,0,0.2);
+      box-shadow: inset 4px 4px 8px rgba(0,0,0,0.2),
+                  inset -2px -2px 6px rgba(255,255,255,0.1);
     }
 
     /* Sınıf düzenle ve sil butonları */
     .class-edit-btn, .class-delete-btn {
-      background: #fff;
-      border: 1px solid #ccc;
-      color: #333;
-      border-radius: 50%;
-      width: 32px; 
+      width: 32px;
       height: 32px;
+      border: none;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 16px;
-      display: flex; 
-      align-items: center; 
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
       justify-content: center;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-      transition: transform 0.2s ease;
+      font-size: 14px;
+      opacity: 0.7;
+      position: relative;
+      overflow: hidden;
     }
+    .class-edit-btn {
+      background: linear-gradient(145deg, #4CAF50, #388E3C);
+      color: white;
+    }
+    .class-delete-btn {
+      background: linear-gradient(145deg, #f44336, #d32f2f);
+      color: white;
+    }
+    /* Hover efektleri */
     .class-edit-btn:hover, .class-delete-btn:hover {
-      transform: scale(1.1);
+      opacity: 1;
+      transform: translateY(-2px);
     }
+    /* Tooltip eklentisi */
+    .class-edit-btn::before, .class-delete-btn::before {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .class-edit-btn:hover::before, .class-delete-btn:hover::before {
+      opacity: 1;
+      visibility: visible;
+      bottom: -35px;
+    }
+    /* Tıklama animasyonu */
     .class-edit-btn:active, .class-delete-btn:active {
-      transform: scale(0.9);
+      transform: scale(0.95);
+    }
+    /* Ripple efekti */
+    .class-edit-btn::after, .class-delete-btn::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+      background-repeat: no-repeat;
+      background-position: 50%;
+      transform: scale(10, 10);
+      opacity: 0;
+      transition: transform .5s, opacity 1s;
+    }
+    .class-edit-btn:active::after, .class-delete-btn:active::after {
+      transform: scale(0, 0);
+      opacity: 0.3;
+      transition: 0s;
     }
 
     /* ========== Normal Butonlar (Öğrenci Ekle, Yazdır vb.) - 3D Bombeli ========== */
     .add-btn {
-      background: radial-gradient(circle at 50% 40%, #4CAF50, #388E3C);
+      background: linear-gradient(145deg, #4CAF50, #388E3C);
       color: white;
       border: none;
-      border-radius: 24px; 
-      font-size: 13px;
-      white-space: nowrap;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      padding: 8px 16px;
-      box-shadow: 0 3px 0 #388E3C, 0 3px 6px rgba(0,0,0,0.2);
-      transition: all 0.2s ease;
+      box-shadow: 5px 5px 10px rgba(56, 142, 60, 0.3),
+                  -2px -2px 6px rgba(76, 175, 80, 0.2);
+      transition: all 0.3s ease;
       text-align: center;
     }
     .add-btn:hover {
-      box-shadow: 0 4px 0 #388E3C, 0 4px 6px rgba(0,0,0,0.3);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 12px rgba(56, 142, 60, 0.4),
+                  -3px -3px 8px rgba(76, 175, 80, 0.3);
     }
     .add-btn:active {
       box-shadow: 0 2px 0 #388E3C, 0 2px 6px rgba(0,0,0,0.2);
@@ -178,21 +275,23 @@
     }
 
     .print-btn {
-      background: radial-gradient(circle at 50% 40%, #2196F3, #1976D2);
+      background: linear-gradient(145deg, #2196F3, #1976D2);
       color: white;
       border: none;
-      border-radius: 24px; 
-      font-size: 13px;
-      white-space: nowrap;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      padding: 8px 16px;
-      box-shadow: 0 3px 0 #1976D2, 0 3px 6px rgba(0,0,0,0.2);
-      transition: all 0.2s ease;
+      box-shadow: 5px 5px 10px rgba(25, 118, 210, 0.3),
+                  -2px -2px 6px rgba(33, 150, 243, 0.2);
+      transition: all 0.3s ease;
       text-align: center;
     }
     .print-btn:hover {
-      box-shadow: 0 4px 0 #1976D2, 0 4px 6px rgba(0,0,0,0.3);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 12px rgba(25, 118, 210, 0.4),
+                  -3px -3px 8px rgba(33, 150, 243, 0.3);
     }
     .print-btn:active {
       box-shadow: 0 2px 0 #1976D2, 0 2px 6px rgba(0,0,0,0.2);
@@ -200,21 +299,23 @@
     }
 
     .clear-btn {
-      background: radial-gradient(circle at 50% 40%, #FF9800, #F57C00);
+      background: linear-gradient(145deg, #FF9800, #F57C00);
       color: white;
       border: none;
-      border-radius: 24px; 
-      font-size: 13px;
-      white-space: nowrap;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      padding: 8px 16px;
-      box-shadow: 0 3px 0 #F57C00, 0 3px 6px rgba(0,0,0,0.2);
-      transition: all 0.2s ease;
+      box-shadow: 5px 5px 10px rgba(245, 124, 0, 0.3),
+                  -2px -2px 6px rgba(255, 152, 0, 0.2);
+      transition: all 0.3s ease;
       text-align: center;
     }
     .clear-btn:hover {
-      box-shadow: 0 4px 0 #F57C00, 0 4px 6px rgba(0,0,0,0.3);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 12px rgba(245, 124, 0, 0.4),
+                  -3px -3px 8px rgba(255, 152, 0, 0.3);
     }
     .clear-btn:active {
       box-shadow: 0 2px 0 #F57C00, 0 2px 6px rgba(0,0,0,0.2);
@@ -222,21 +323,23 @@
     }
 
     .edit-criteria-btn {
-      background: radial-gradient(circle at 50% 40%, #9C27B0, #7B1FA2);
+      background: linear-gradient(145deg, #9C27B0, #7B1FA2);
       color: white;
       border: none;
-      border-radius: 24px; 
-      font-size: 13px;
-      white-space: nowrap;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      padding: 8px 16px;
-      box-shadow: 0 3px 0 #7B1FA2, 0 3px 6px rgba(0,0,0,0.2);
-      transition: all 0.2s ease;
+      box-shadow: 5px 5px 10px rgba(123, 31, 162, 0.3),
+                  -2px -2px 6px rgba(156, 39, 176, 0.2);
+      transition: all 0.3s ease;
       text-align: center;
     }
     .edit-criteria-btn:hover {
-      box-shadow: 0 4px 0 #7B1FA2, 0 4px 6px rgba(0,0,0,0.3);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 12px rgba(123, 31, 162, 0.4),
+                  -3px -3px 8px rgba(156, 39, 176, 0.3);
     }
     .edit-criteria-btn:active {
       box-shadow: 0 2px 0 #7B1FA2, 0 2px 6px rgba(0,0,0,0.2);
@@ -244,21 +347,23 @@
     }
 
     .excel-btn {
-      background: radial-gradient(circle at 50% 40%, #009688, #00796B);
+      background: linear-gradient(145deg, #009688, #00796B);
       color: white;
       border: none;
-      border-radius: 24px; 
-      font-size: 13px;
-      white-space: nowrap;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      padding: 8px 16px;
-      box-shadow: 0 3px 0 #00796B, 0 3px 6px rgba(0,0,0,0.2);
-      transition: all 0.2s ease;
+      box-shadow: 5px 5px 10px rgba(0, 121, 107, 0.3),
+                  -2px -2px 6px rgba(0, 150, 136, 0.2);
+      transition: all 0.3s ease;
       text-align: center;
     }
     .excel-btn:hover {
-      box-shadow: 0 4px 0 #00796B, 0 4px 6px rgba(0,0,0,0.3);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 12px rgba(0, 121, 107, 0.4),
+                  -3px -3px 8px rgba(0, 150, 136, 0.3);
     }
     .excel-btn:active {
       box-shadow: 0 2px 0 #00796B, 0 2px 6px rgba(0,0,0,0.2);
@@ -267,37 +372,39 @@
 
     /* Öğrenci düzenle/sil butonları */
     .edit-btn {
-      background: radial-gradient(circle at 50% 40%, #2196F3, #1976D2);
+      background: linear-gradient(145deg, #2196F3, #1976D2);
       color: white;
-      padding: 4px 8px; 
-      font-size: 11px;
+      padding: 8px 16px; 
+      font-size: 12px;
       margin-right: 4px;
       border: none;
-      border-radius: 24px; 
-      box-shadow: 0 3px 0 #1976D2, 0 3px 6px rgba(0,0,0,0.2);
-      transition: all 0.2s ease;
+      border-radius: 8px; 
+      box-shadow: 3px 3px 6px rgba(25, 118, 210, 0.3),
+                  -1px -1px 4px rgba(33, 150, 243, 0.2);
+      transition: all 0.3s ease;
     }
     .edit-btn:hover {
-      box-shadow: 0 4px 0 #1976D2, 0 4px 6px rgba(0,0,0,0.3);
       transform: translateY(-1px);
+      filter: brightness(110%);
     }
     .edit-btn:active {
       box-shadow: 0 2px 0 #1976D2, 0 2px 6px rgba(0,0,0,0.2);
       transform: translateY(1px);
     }
     .delete-btn {
-      background: radial-gradient(circle at 50% 40%, #dc3545, #b52b3b);
+      background: linear-gradient(145deg, #dc3545, #b52b3b);
       color: white;
-      padding: 4px 8px; 
-      font-size: 11px;
+      padding: 8px 16px; 
+      font-size: 12px;
       border: none;
-      border-radius: 24px; 
-      box-shadow: 0 3px 0 #b52b3b, 0 3px 6px rgba(0,0,0,0.2);
-      transition: all 0.2s ease;
+      border-radius: 8px; 
+      box-shadow: 3px 3px 6px rgba(181, 43, 59, 0.3),
+                  -1px -1px 4px rgba(220, 53, 69, 0.2);
+      transition: all 0.3s ease;
     }
     .delete-btn:hover {
-      box-shadow: 0 4px 0 #b52b3b, 0 4px 6px rgba(0,0,0,0.3);
       transform: translateY(-1px);
+      filter: brightness(110%);
     }
     .delete-btn:active {
       box-shadow: 0 2px 0 #b52b3b, 0 2px 6px rgba(0,0,0,0.2);
@@ -509,6 +616,35 @@
         width: 100%;
         margin-bottom: 4px;
       }
+      .form-container {
+        padding: 15px;
+      }
+      .input-long,
+      .input-medium,
+      .input-short {
+        min-width: 100%;
+        max-width: 100%;
+      }
+      .student-info-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .student-info-group input {
+        width: 100%;
+      }
+    }
+    @media screen and (min-width: 769px) and (max-width: 1024px) {
+      .input-long {
+        min-width: 250px;
+      }
+      .input-medium {
+        min-width: 180px;
+        max-width: 250px;
+      }
+      .input-short {
+        min-width: 120px;
+        max-width: 150px;
+      }
     }
     @media print {
       @page {
@@ -600,6 +736,497 @@
         background-color: #f0f0f0 !important;
         -webkit-print-color-adjust: exact;
       }
+    }
+
+    /* Excel Popup Özel Stilleri */
+    .excel-popup {
+      background: linear-gradient(145deg, #ffffff, #f8f9fa);
+      border-radius: 20px;
+      padding: 25px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 10px 10px 20px #d1d1d1,
+                  -10px -10px 20px #ffffff;
+      transform: scale(0.95);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .popup-overlay.active .excel-popup {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .excel-popup .popup-header {
+      background: linear-gradient(145deg, #009688, #00796B);
+      margin: -25px -25px 20px -25px;
+      padding: 20px 25px;
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .excel-popup .popup-header h3 {
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .excel-popup .popup-close {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .excel-popup .popup-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+
+    .excel-instructions {
+      background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: inset 3px 3px 6px #d1d1d1,
+                  inset -3px -3px 6px #ffffff;
+    }
+
+    .excel-instructions h4 {
+      color: #00796B;
+      font-size: 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .excel-instructions h4 i {
+      color: #009688;
+    }
+
+    .excel-instructions ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .excel-instructions li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .excel-instructions li i {
+      color: #009688;
+      font-size: 14px;
+    }
+
+    .excel-instructions .example {
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-family: monospace;
+      font-size: 13px;
+      color: #666;
+      border: 1px dashed #00796B;
+    }
+
+    .excel-popup textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      box-shadow: inset 3px 3px 6px #d1d1d1,
+                  inset -3px -3px 6px #ffffff;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .excel-popup textarea:focus {
+      outline: none;
+      box-shadow: inset 4px 4px 8px #d1d1d1,
+                  inset -4px -4px 8px #ffffff;
+    }
+
+    .excel-popup .popup-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .excel-popup .popup-save,
+    .excel-popup .popup-cancel {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .excel-popup .popup-save {
+      background: linear-gradient(145deg, #009688, #00796B);
+      color: white;
+      box-shadow: 5px 5px 10px rgba(0, 121, 107, 0.3),
+                  -2px -2px 6px rgba(0, 150, 136, 0.2);
+    }
+
+    .excel-popup .popup-cancel {
+      background: linear-gradient(145deg, #f44336, #d32f2f);
+      color: white;
+      box-shadow: 5px 5px 10px rgba(211, 47, 47, 0.3),
+                  -2px -2px 6px rgba(244, 67, 54, 0.2);
+    }
+
+    .excel-popup .popup-save:hover,
+    .excel-popup .popup-cancel:hover {
+      transform: translateY(-2px);
+      filter: brightness(110%);
+    }
+
+    .excel-popup .popup-save:active,
+    .excel-popup .popup-cancel:active {
+      transform: translateY(1px);
+      filter: brightness(90%);
+    }
+
+    /* Sınıf Düzenleme Popup Stilleri */
+    .class-edit-popup {
+      background: linear-gradient(145deg, #ffffff, #f8f9fa);
+      border-radius: 20px;
+      padding: 25px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 10px 10px 20px #d1d1d1,
+                  -10px -10px 20px #ffffff;
+      transform: scale(0.95);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .popup-overlay.active .class-edit-popup {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .class-edit-popup .popup-header {
+      background: linear-gradient(145deg, #673AB7, #5E35B1);
+      margin: -25px -25px 20px -25px;
+      padding: 20px 25px;
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .class-edit-popup .popup-header h3 {
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .class-edit-popup .popup-close {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .class-edit-popup .popup-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+
+    .class-edit-popup .popup-content {
+      background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: inset 3px 3px 6px #d1d1d1,
+                  inset -3px -3px 6px #ffffff;
+    }
+
+    .class-edit-popup .popup-content label {
+      color: #00796B;
+      font-size: 16px;
+      margin-bottom: 10px;
+      display: block;
+      font-weight: 500;
+    }
+
+    .class-edit-popup input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      box-shadow: inset 3px 3px 6px #d1d1d1,
+                  inset -3px -3px 6px #ffffff;
+      font-size: 14px;
+      margin-top: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .class-edit-popup input[type="text"]:focus {
+      outline: none;
+      box-shadow: inset 4px 4px 8px #d1d1d1,
+                  inset -4px -4px 8px #ffffff;
+    }
+
+    .class-edit-popup .popup-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .class-edit-popup .popup-save,
+    .class-edit-popup .popup-cancel {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .class-edit-popup .popup-save {
+      background: linear-gradient(145deg, #673AB7, #5E35B1);
+      color: white;
+      box-shadow: 5px 5px 10px rgba(94, 53, 177, 0.3),
+                  -2px -2px 6px rgba(103, 58, 183, 0.2);
+    }
+
+    .class-edit-popup .popup-cancel {
+      background: linear-gradient(145deg, #f44336, #d32f2f);
+      color: white;
+      box-shadow: 5px 5px 10px rgba(211, 47, 47, 0.3),
+                  -2px -2px 6px rgba(244, 67, 54, 0.2);
+    }
+
+    .class-edit-popup .popup-save:hover,
+    .class-edit-popup .popup-cancel:hover {
+      transform: translateY(-2px);
+      filter: brightness(110%);
+    }
+
+    .class-edit-popup .popup-save:active,
+    .class-edit-popup .popup-cancel:active {
+      transform: translateY(1px);
+      filter: brightness(90%);
+    }
+
+    /* Kriterler Popup Stilleri */
+    .criteria-popup {
+      background: linear-gradient(145deg, #ffffff, #f8f9fa);
+      border-radius: 20px;
+      padding: 25px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 10px 10px 20px #d1d1d1,
+                  -10px -10px 20px #ffffff;
+      transform: scale(0.95);
+      opacity: 0;
+      transition: all 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .popup-overlay.active .criteria-popup {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .criteria-popup .popup-header {
+      background: linear-gradient(145deg, #FFB5BA, #FFD1D5); /* Pastel pembe */
+      margin: -25px -25px 20px -25px;
+      padding: 20px 25px;
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .criteria-popup .popup-header h3 {
+      color: #D16B6B; /* Koyu pastel pembe */
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .criteria-popup .popup-close {
+      background: rgba(255, 255, 255, 0.3);
+      border: none;
+      color: #D16B6B;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .criteria-popup .popup-close:hover {
+      background: rgba(255, 255, 255, 0.4);
+      transform: rotate(90deg);
+    }
+
+    .criteria-content {
+      padding: 10px;
+      max-height: calc(90vh - 180px);
+      overflow-y: auto;
+    }
+
+    .criteria-input-group {
+      background: linear-gradient(145deg, #f8f9fa, #ffffff);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 5px 5px 10px #e6e6e6,
+                  -5px -5px 10px #ffffff;
+      transition: all 0.3s ease;
+    }
+
+    .criteria-input-group:hover {
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 12px #e6e6e6,
+                  -6px -6px 12px #ffffff;
+    }
+
+    .criteria-input-group label {
+      color: #8B9EB7; /* Pastel mavi */
+      font-size: 15px;
+      margin-bottom: 8px;
+      display: block;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .criteria-input-group label i {
+      color: #95B0D8; /* Açık pastel mavi */
+    }
+
+    .criteria-input-group textarea {
+      width: 100%;
+      min-height: 60px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      box-shadow: inset 3px 3px 6px #d1d1d1,
+                  inset -3px -3px 6px #ffffff;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      transition: all 0.3s ease;
+    }
+
+    .criteria-input-group textarea:focus {
+      outline: none;
+      box-shadow: inset 4px 4px 8px #d1d1d1,
+                  inset -4px -4px 8px #ffffff;
+    }
+
+    .criteria-popup .popup-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .criteria-popup .popup-save,
+    .criteria-popup .popup-cancel {
+      padding: 10px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .criteria-popup .popup-save {
+      background: linear-gradient(145deg, #B5E6D8, #98C9BB); /* Pastel yeşil */
+      color: #2A7D63;
+      box-shadow: 5px 5px 10px rgba(42, 125, 99, 0.2),
+                  -2px -2px 6px rgba(181, 230, 216, 0.2);
+    }
+
+    .criteria-popup .popup-cancel {
+      background: linear-gradient(145deg, #FFB5BA, #FF9AA2); /* Pastel kırmızı */
+      color: #D16B6B;
+      box-shadow: 5px 5px 10px rgba(209, 107, 107, 0.2),
+                  -2px -2px 6px rgba(255, 181, 186, 0.2);
+    }
+
+    .criteria-popup .popup-save:hover,
+    .criteria-popup .popup-cancel:hover {
+      transform: translateY(-2px);
+      filter: brightness(105%);
+    }
+
+    .criteria-popup .popup-save:active,
+    .criteria-popup .popup-cancel:active {
+      transform: translateY(1px);
+      filter: brightness(95%);
+    }
+
+    /* Scrollbar stilleri */
+    .criteria-content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .criteria-content::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    .criteria-content::-webkit-scrollbar-thumb {
+      background: #FFB5BA;
+      border-radius: 4px;
+    }
+
+    .criteria-content::-webkit-scrollbar-thumb:hover {
+      background: #FF9AA2;
     }
   </style>
 </head>
@@ -742,59 +1369,93 @@
   <div class="popup-overlay" id="criteriaPopup">
     <div class="popup criteria-popup">
       <div class="popup-header">
-        <h3>Kriterleri Düzenle</h3>
-        <button class="popup-close" onclick="closeCriteriaPopup()">&times;</button>
+        <h3><i class="fas fa-tasks"></i> Kriterleri Düzenle</h3>
+        <button class="popup-close" onclick="closeCriteriaPopup()">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
-      <div class="popup-content criteria-content">
+      <div class="criteria-content">
         <div id="criteriaInputs"></div>
       </div>
       <div class="popup-buttons">
-        <button onclick="closeCriteriaPopup()" class="popup-cancel">İptal</button>
-        <button onclick="saveCriteria()" class="popup-save">Kaydet</button>
+        <button onclick="closeCriteriaPopup()" class="popup-cancel">
+          <i class="fas fa-times"></i> İptal
+        </button>
+        <button onclick="saveCriteria()" class="popup-save">
+          <i class="fas fa-check"></i> Kaydet
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Excelden Ekle Popup'ı -->
+  <!-- Excel'den Ekle Popup'ı -->
   <div class="popup-overlay" id="excelPopup">
-    <div class="popup">
+    <div class="popup excel-popup">
       <div class="popup-header">
-        <h3>Excel'den Veri Ekle</h3>
-        <button class="popup-close" onclick="closeExcelPopup()">&times;</button>
+        <h3><i class="fas fa-file-excel"></i> Excel'den Veri Ekle</h3>
+        <button class="popup-close" onclick="closeExcelPopup()">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
-      <div class="popup-content">
-        <p>
-          Lütfen aşağıdaki alana Excel'den kopyaladığınız satırları yapıştırın.<br>
-          Format: <code>ÖğrNo Ad Soyad</code> şeklinde, her satırda bir öğrenci.
-        </p>
-        <textarea 
-          id="excelText" 
-          rows="8" 
-          placeholder="Buraya Yapıştırın"
-        ></textarea>
+      
+      <div class="excel-instructions">
+        <h4><i class="fas fa-info-circle"></i> Nasıl Kullanılır?</h4>
+        <ul>
+          <li><i class="fas fa-check"></i> Excel'den öğrenci listesini kopyalayın</li>
+          <li><i class="fas fa-check"></i> Her satır bir öğrenci bilgisi içermeli</li>
+          <li><i class="fas fa-check"></i> Format şu şekilde olmalı:</li>
+        </ul>
+        <div class="example">
+          123  Ahmet Yılmaz<br>
+          124  Ayşe Demir<br>
+          125  Mehmet Kaya
+        </div>
       </div>
+
+      <textarea 
+        id="excelText" 
+        placeholder="Excel'den kopyaladığınız öğrenci listesini buraya yapıştırın..."
+      ></textarea>
+
       <div class="popup-buttons">
-        <button onclick="closeExcelPopup()" class="popup-cancel">İptal</button>
-        <button onclick="parseExcelText()" class="popup-save">Kaydet</button>
+        <button onclick="closeExcelPopup()" class="popup-cancel">
+          <i class="fas fa-times"></i> İptal
+        </button>
+        <button onclick="parseExcelText()" class="popup-save">
+          <i class="fas fa-check"></i> Kaydet
+        </button>
       </div>
     </div>
   </div>
 
   <!-- Sınıf Düzenleme Popup'ı -->
   <div class="popup-overlay" id="editClassPopup">
-    <div class="popup">
+    <div class="popup class-edit-popup">
       <div class="popup-header">
-        <h3>Sınıf Düzenle</h3>
-        <button class="popup-close" onclick="closeEditClassPopup()">&times;</button>
+        <h3><i class="fas fa-edit"></i> Sınıf Düzenle</h3>
+        <button class="popup-close" onclick="closeEditClassPopup()">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
       <div class="popup-content">
         <input type="hidden" id="oldClassName" />
-        <label for="newClassNameInput">Yeni Sınıf Adı:</label>
-        <input type="text" id="newClassNameInput" placeholder="Örn: 9-B" required />
+        <label for="newClassNameInput">
+          <i class="fas fa-school"></i> Yeni Sınıf Adı
+        </label>
+        <input 
+          type="text" 
+          id="newClassNameInput" 
+          placeholder="Örn: 9-B" 
+          required 
+        />
       </div>
       <div class="popup-buttons">
-        <button onclick="closeEditClassPopup()" class="popup-cancel">İptal</button>
-        <button onclick="saveClassEdit()" class="popup-save">Kaydet</button>
+        <button onclick="closeEditClassPopup()" class="popup-cancel">
+          <i class="fas fa-times"></i> İptal
+        </button>
+        <button onclick="saveClassEdit()" class="popup-save">
+          <i class="fas fa-check"></i> Kaydet
+        </button>
       </div>
     </div>
   </div>
@@ -871,10 +1532,18 @@
     function editClass(cls) {
       document.getElementById('oldClassName').value = cls;
       document.getElementById('newClassNameInput').value = cls;
-      document.getElementById('editClassPopup').style.display = 'flex';
+      const popup = document.getElementById('editClassPopup');
+      popup.style.display = 'flex';
+      setTimeout(() => {
+        popup.classList.add('active');
+      }, 10);
     }
     function closeEditClassPopup() {
-      document.getElementById('editClassPopup').style.display = 'none';
+      const popup = document.getElementById('editClassPopup');
+      popup.classList.remove('active');
+      setTimeout(() => {
+        popup.style.display = 'none';
+      }, 300);
     }
     function saveClassEdit() {
       const oldName = document.getElementById('oldClassName').value;
@@ -1013,11 +1682,20 @@
         alert("Lütfen önce bir sınıf ekleyin ve seçin!");
         return;
       }
-      document.getElementById('excelPopup').style.display = 'flex';
+      const popup = document.getElementById('excelPopup');
+      popup.style.display = 'flex';
+      // Animasyon için timeout
+      setTimeout(() => {
+        popup.classList.add('active');
+      }, 10);
     }
     function closeExcelPopup() {
-      document.getElementById('excelPopup').style.display = 'none';
-      document.getElementById('excelText').value = '';
+      const popup = document.getElementById('excelPopup');
+      popup.classList.remove('active');
+      setTimeout(() => {
+        popup.style.display = 'none';
+        document.getElementById('excelText').value = '';
+      }, 300);
     }
     window.parseExcelText = function() {
       if(!currentClass) return;
@@ -1114,7 +1792,7 @@
         const group = document.createElement('div');
         group.className = 'criteria-input-group';
         const label = document.createElement('label');
-        label.textContent = `Kriter ${i+1}:`;
+        label.innerHTML = `<i class="fas fa-check-circle"></i> Kriter ${i+1}:`;
         const textarea = document.createElement('textarea');
         textarea.value = criterion.replace(/\n/g,' ');
         textarea.id = `criterion${i}`;
@@ -1123,6 +1801,9 @@
         inputsContainer.appendChild(group);
       });
       popup.style.display = 'flex';
+      setTimeout(() => {
+        popup.classList.add('active');
+      }, 10);
     };
     window.closeCriteriaPopup = function() {
       document.getElementById('criteriaPopup').style.display = 'none';
