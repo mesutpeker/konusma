@@ -1492,7 +1492,9 @@
       if (currentClass) highlightTab(currentClass);
       updateTable();
 
-      /* "tableTitle" input'unun anlık değişimini dinliyor */
+      /* Tüm başlık input'larının anlık değişimini dinliyor */
+      document.getElementById('mainTitle').addEventListener('input', updateTitles);
+      document.getElementById('subTitle').addEventListener('input', updateTitles);
       document.getElementById('tableTitle').addEventListener('input', updateTitles);
     });
 
@@ -1875,9 +1877,9 @@
       const subTitle = document.getElementById('subTitle').value;
       const tableTitle = document.getElementById('tableTitle').value;
 
-      document.querySelectorAll('.main-title').forEach(el => el.textContent = mainTitle);
-      document.querySelectorAll('.criteria-header').forEach(el => el.textContent = subTitle);
-      document.getElementById('dynamicTableTitle').textContent = tableTitle; 
+      document.querySelector('.main-title').textContent = mainTitle;
+      document.querySelector('.criteria-header').textContent = subTitle;
+      document.getElementById('dynamicTableTitle').textContent = tableTitle;
     }
 
     function updateCriteriaDisplay() {
